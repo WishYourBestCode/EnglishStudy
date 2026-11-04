@@ -1,0 +1,22 @@
+---
+layout: null
+---
+[
+{%- assign emitted = false -%}
+{%- for file in site.static_files -%}
+  {%- assign parts = file.path | split: '/' -%}
+  {%- assign ext = file.extname | downcase -%}
+  {%- if parts[1] == 'lessons' -%}
+    {%- if ext == '.html' or ext == '.htm' -%}
+      {%- assign title = file.basename | replace: '-', ' ' | replace: '_', ' ' | capitalize -%}
+      {%- assign subject = 'General' -%}
+      {%- if parts.size > 3 -%}
+        {%- assign subject = parts[2] | replace: '-', ' ' | replace: '_', ' ' | capitalize -%}
+      {%- endif -%}
+      {%- if emitted -%},{%- endif -%}
+      {"title":{{ title | jsonify }},"subject":{{ subject | jsonify }},"url":{{ file.path | remove_first: '/' | jsonify }}}
+      {%- assign emitted = true -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+]
