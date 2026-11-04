@@ -1,6 +1,6 @@
 # EnglishStudy
 
-Open `index.html` for the study library. It includes the AI and jobs essay and the 500 English pairing phrases quiz. The included pages work when opened from an extracted folder.
+Open `index.html` for the study library. It includes eleven lessons across IELTS writing, grammar, vocabulary, speaking, reading, and listening. Listen to the workshop voicemail, check your quiz answers, or save a writing draft in your browser. The included pages work when opened from an extracted folder.
 
 ## Publish on GitHub Pages
 

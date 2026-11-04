@@ -21,6 +21,7 @@ h1,h2,h3{font-family:var(--serif);line-height:1.13}
 .intro h1,.reading-title{font-size:clamp(2.6rem,6vw,4.65rem);font-weight:500;letter-spacing:-.057em;margin:0}
 .dot{color:#a9673f}
 .intro-copy{max-width:540px;margin:1rem 0 0;color:var(--muted);font-size:1.04rem}
+.collection{margin-top:28px}
 .shelf-heading{display:flex;align-items:baseline;gap:15px;border-bottom:1px solid var(--line);padding-bottom:10px}
 .shelf-heading h2{font-weight:500;letter-spacing:-.035em;font-size:1.7rem;margin:0}
 .count{font-weight:500;color:var(--muted)}

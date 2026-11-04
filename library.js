@@ -3,6 +3,7 @@
   const get = id => document.getElementById(id);
   const shelf = get('lessons');
   const builtIns = Array.from(shelf.children);
+  const builtInUrls = new Set(builtIns.map(card => card.querySelector('a').href));
   const filter = get('subject-filter');
   const panel = get('add-panel');
   const form = get('lesson-form');
@@ -223,7 +224,7 @@
       for (const entry of catalog) {
         if (!entry || typeof entry.url !== 'string') continue;
         const link = safeLink(entry.url, document.baseURI);
-        if (!link || link.origin !== location.origin) continue;
+        if (!link || link.origin !== location.origin || builtInUrls.has(link.href)) continue;
         const item = {title: entry.title, subject: entry.subject, url: link.href, kind: 'url'};
         if (isLesson(item)) published.push(item);
       }
