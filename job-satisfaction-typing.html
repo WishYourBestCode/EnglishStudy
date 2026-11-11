@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#174f49">
+<title>Job satisfaction · IELTS typing practice</title>
+<style>
+:root{color-scheme:light;--ink:#193b37;--green:#174f49;--paper:#faf7ef;--line:#d7ded6}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 system-ui,sans-serif}main{max-width:1000px;margin:auto;padding:28px 24px 64px}a{color:var(--green)}.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;font-weight:700;margin:36px 0 8px}h1{font:clamp(2rem,5vw,3.6rem)/1.12 Georgia,serif;margin:0 0 16px}h2{font-size:1rem;margin:0 0 14px}.intro{max-width:680px;color:#4e635e}.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:26px 0 18px}select,button,textarea{font:inherit}select,button{border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:white;color:var(--ink)}button{cursor:pointer;font-weight:600}button.primary{background:var(--green);color:white;border-color:var(--green)}button:disabled{opacity:.45;cursor:default}:focus-visible{outline:3px solid #b27526;outline-offset:3px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.stat{border:1px solid var(--line);border-radius:12px;padding:14px 18px;background:#fffdf8}.stat strong{display:block;font-size:1.7rem;font-variant-numeric:tabular-nums}.stat span{font-size:.8rem;color:#52665f}.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:24px;margin-top:20px}#reference{font:19px/1.95 Georgia,serif;overflow-wrap:anywhere;max-height:360px;overflow:auto;padding:4px}.correct{color:#1d6551;background:#eaf5ed}.wrong{color:#9d2020;background:#ffe2de;text-decoration:underline wavy}.current{border-bottom:3px solid #b27526;background:#fff2c9}.legend,.hint{font-size:.85rem;color:#52665f}.legend{margin-bottom:0}label[for=typing]{display:block;font-weight:650;margin-bottom:10px}textarea{display:block;width:100%;min-height:210px;border:1px solid #879c92;border-radius:8px;padding:16px;line-height:1.7;resize:vertical;background:#fffefb;color:#193b37}progress{width:100%;height:10px;accent-color:var(--green)}#message{min-height:1.7em;font-weight:600}footer{font-size:.8rem;color:#52665f;margin-top:30px}noscript p{padding:20px;background:#ffe2de}@media(max-width:550px){main{padding:20px 16px 40px}.stats{grid-template-columns:repeat(2,1fr)}.panel{padding:16px}.controls select{width:100%}#reference{max-height:280px}}
+</style>
+</head>
+<body><main>
+<a href="index.html">← EnglishStudy library</a>
+<p class="eyebrow">IELTS writing · Type and learn</p>
+<h1>Job satisfaction or a high salary?</h1>
+<p class="intro">Practise your essay one paragraph at a time, then try the full text. Focus on accurate sentences before speed.</p>
+<noscript><p>Enable JavaScript to use the timer and typing test.</p></noscript>
+<div class="controls"><label for="mode">Practice</label><select id="mode"><option value="0">1 · Introduction</option><option value="1">2 · Financial security</option><option value="2">3 · Trust and job satisfaction</option><option value="3">4 · Supportive leadership</option><option value="4">5 · Conclusion</option><option value="all">Full essay</option></select><button id="restart" type="button">Restart</button><button class="primary" id="next" type="button" disabled>Next paragraph →</button></div>
+<div class="stats" aria-label="Typing statistics"><div class="stat"><strong id="wpm">0</strong><span>Words / minute</span></div><div class="stat"><strong id="accuracy">—</strong><span>Current text accuracy</span></div><div class="stat"><strong id="elapsed">0:00</strong><span>Elapsed time</span></div><div class="stat"><strong id="completion">0%</strong><span>Correct characters</span></div></div>
+<progress id="progress" value="0" max="100" aria-label="Correct characters progress"></progress>
+<section class="panel" aria-labelledby="reference-title"><h2 id="reference-title">Text to type <span id="word-count"></span></h2><div id="reference" tabindex="0" aria-label="Reference essay text"></div><p class="legend">Green = correct · Red underline = mismatch · Gold underline = next character</p></section>
+<section class="panel"><label for="typing">Your typing</label><textarea id="typing" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="instructions message" placeholder="Start typing the text above…"></textarea><p class="hint" id="instructions">The timer starts with your first character. Correct mistakes with Backspace. Straight and curly apostrophes both work; line breaks and extra spaces are treated as spaces. Paste is disabled for practice.</p><p id="message" role="status" aria-live="polite">Ready when you are.</p></section>
+<footer>Speed uses five correct characters per word. Accuracy reflects your current text after corrections. This is typing practice, not an IELTS band assessment.</footer>
+</main>
+<script>
+'use strict';
+const paragraphs = [
+"Some people believe that a high salary is the most important factor when choosing a job, while others prioritize job satisfaction and feeling valued at work. Although earning enough money is essential, I believe that a supportive workplace is more important once basic financial needs are met.",
+"On the one hand, a high salary provides financial security. Employees need enough income to pay their bills, support their families, and save for the future. For example, a parent may choose a better-paid job to cover childcare costs, even if the work is less enjoyable. Financial difficulties can also cause stress, so it is understandable that some people prioritize salary over job satisfaction.",
+"On the other hand, a supportive workplace can build employees’ trust and help them provide better service to clients. If managers trust their employees and give them clear guidance, employees are more likely to feel valued and become committed to their work. For example, an IT technician who is allowed to investigate problems independently can develop confidence and produce effective results. This sense of achievement can make the job more satisfying.",
+"Furthermore, a workplace culture should prioritize effective leadership rather than micromanagement. When problems arise, such as project delays or miscommunication between clients and vendors, a leader should help the team find solutions. Employees who receive support rather than blame may experience less stress and feel more comfortable asking for help. This can improve both their well-being and the quality of their work.",
+"In conclusion, a high salary is important for financial security. However, I believe that job satisfaction and feeling valued matter more once employees can meet their essential expenses, because a supportive workplace offers lasting benefits for their health and motivation."
+];
+const get = id => document.getElementById(id);
+const normalize = text => text.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
+let target='', started=null, finished=null, ticker=null, correct=0, spans=[];
+function updateClock(){
+ const seconds=started===null?0:((finished===null?performance.now():finished)-started)/1000;
+ get('elapsed').textContent=Math.floor(seconds/60)+':'+String(Math.floor(seconds%60)).padStart(2,'0');
+ get('wpm').textContent=seconds>0?Math.round((correct/5)/(Math.max(seconds,1)/60)):0;
+}
+function reset(){
+ clearInterval(ticker);ticker=null;started=null;finished=null;correct=0;
+ const selected=get('mode').value;
+ const display=selected==='all'?paragraphs.join(' '):paragraphs[Number(selected)];
+ target=normalize(display);
+ const fragment=document.createDocumentFragment();
+ spans=Array.from(display, character=>{const span=document.createElement('span');span.textContent=character;fragment.append(span);return span;});
+ get('reference').replaceChildren(fragment);get('reference').scrollTop=0;
+ get('typing').value='';get('typing').disabled=false;
+ get('accuracy').textContent='—';get('completion').textContent='0%';get('progress').value=0;
+ get('word-count').textContent='· '+display.split(/\s+/).length+' words';
+ get('message').textContent='Ready when you are.';get('next').disabled=true;
+ spans[0].className='current';updateClock();
+}
+get('typing').addEventListener('input',()=>{
+ const typed=normalize(get('typing').value);
+ if(started===null && typed.length){started=performance.now();ticker=setInterval(updateClock,250);}
+ correct=0;
+ spans.forEach((span,i)=>{
+  const matches=i<typed.length && typed[i]===target[i];if(matches)correct++;
+  span.className=i<typed.length?(matches?'correct':'wrong'):(i===typed.length?'current':'');
+ });
+ get('accuracy').textContent=typed.length?Math.round(correct/typed.length*100)+'%':'—';
+ const progress=Math.floor(correct/target.length*100);get('completion').textContent=progress+'%';get('progress').value=progress;
+ const errors=typed.length-correct;
+ get('message').textContent=errors?errors+' mismatched or extra character'+(errors===1?'':'s')+'. Use Backspace to correct.':(typed.length?'Keep going — your text matches so far.':'Ready when you are.');
+ if(typed===target){finished=performance.now();clearInterval(ticker);get('typing').disabled=true;get('next').disabled=get('mode').value==='all'||get('mode').value==='4';get('message').textContent='Complete! Every character matches. Restart or choose another section.';}
+ updateClock();
+ const active=spans[Math.min(typed.length,spans.length-1)];
+ if(active){const box=get('reference');const y=active.getBoundingClientRect().top-box.getBoundingClientRect().top;if(y>box.clientHeight-40||y<0)box.scrollTop+=y-60;}
+});
+for(const event of ['paste','drop'])get('typing').addEventListener(event,e=>{e.preventDefault();get('message').textContent='Type the text yourself to practise; pasting and dropping text are disabled.';});
+get('restart').addEventListener('click',()=>{reset();get('typing').focus();});
+get('mode').addEventListener('change',reset);
+get('next').addEventListener('click',()=>{const n=Number(get('mode').value);if(Number.isInteger(n)&&n<4){get('mode').value=String(n+1);reset();get('typing').focus();}});
+reset();
+</script></body></html>
