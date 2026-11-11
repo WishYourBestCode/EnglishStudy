@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#174f49">
   <title>EnglishStudy · Study library</title>
   <link rel="stylesheet" href="study.css">
-  <script defer src="library.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to lessons</a>
@@ -23,31 +22,10 @@
     <div class="intro">
       <p class="eyebrow">The study collection</p>
       <h1>My English library<span class="dot">.</span></h1>
-      <p class="intro-copy">Choose a subject, then open a lesson. Write an essay, practise a conversation, or check your answers as you read and listen.</p>
+      <p class="intro-copy">Practise IELTS writing, learn 500 pairing phrases, or type the essay about job satisfaction and salary.</p>
     </div>
-    <details class="add-lesson" id="add-panel" hidden>
-      <summary><span class="plus" aria-hidden="true"></span><span>Add a lesson</span><span class="summary-note">Link or HTML file</span></summary>
-      <form id="lesson-form">
-        <p class="form-intro">Keep extra pages on this shelf in this browser. Clearing browser data removes these saved lessons.</p>
-        <div class="field-row">
-          <label>Lesson title<input id="lesson-title" required maxlength="120" placeholder="e.g. Describing a process"></label>
-          <label>Subject<input id="lesson-subject" required maxlength="60" list="subject-ideas" placeholder="e.g. IELTS writing"><datalist id="subject-ideas"><option>IELTS writing</option><option>Vocabulary</option></datalist></label>
-        </div>
-        <label class="field">Lesson source<select id="lesson-kind"><option value="url">Website link</option><option value="file">HTML file from this device</option></select></label>
-        <label class="field" id="url-field">Website address<input type="url" id="lesson-url" required placeholder="https://example.com/lesson.html"></label>
-        <label class="field" id="file-field" hidden>Standalone HTML file<input type="file" id="lesson-file" accept=".html,.htm,text/html"><span class="hint">Choose one .html or .htm file up to 1 MB. Images and styles stored in separate files are not included.</span></label>
-        <div class="form-actions"><button class="primary" type="submit">Save to shelf</button><button class="text-button" id="cancel-add" type="button">Cancel</button></div>
-        <p id="form-error" class="error" role="alert" hidden></p>
-      </form>
-    </details>
-    <p class="publish-note">To add a lesson for everyone, upload an HTML file to <code>lessons/subject-name/</code> in the GitHub repository.</p>
-    <p class="status" id="status" role="status"></p>
     <section class="collection" aria-labelledby="shelf-title">
-      <div class="shelf-heading"><h2 id="shelf-title">Lesson shelf</h2><span id="lesson-count" class="count">12 lessons</span></div>
-      <div class="tools" hidden id="filter-tools">
-        <label for="subject-filter">Subject</label>
-        <select id="subject-filter"><option value="">All subjects</option><option>IELTS writing</option><option>Vocabulary</option></select>
-      </div>
+      <div class="shelf-heading"><h2 id="shelf-title">Lesson shelf</h2><span id="lesson-count" class="count">3 lessons</span></div>
       <div class="cards" id="lessons">
         <article class="card card-writing" data-subject="IELTS writing">
           <span class="card-top"><span class="tag">IELTS writing</span><span class="folio" aria-hidden="true">01</span></span>
@@ -61,71 +39,15 @@
           <p>Practise natural word combinations with the interactive paragraph quiz.</p>
           <a class="open-lesson" href="vocabulary.html" aria-label="Open the 500 pairing phrases quiz">Open quiz <span aria-hidden="true">→</span></a>
         </article>
-        <article class="card" data-subject="Grammar">
-          <span class="card-top"><span class="tag">Grammar</span><span class="folio" aria-hidden="true">03</span></span>
-          <h3><a class="card-title" href="lessons/grammar/articles.html">Choosing articles</a></h3>
-          <p>Practise a, an, the, and no article in six short sentences.</p>
-          <a class="open-lesson" href="lessons/grammar/articles.html" aria-label="Open lesson: Choosing articles">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="card" data-subject="Speaking">
-          <span class="card-top"><span class="tag">Speaking</span><span class="folio" aria-hidden="true">04</span></span>
-          <h3><a class="card-title" href="lessons/speaking/a-problem-you-solved.html">A problem you solved</a></h3>
-          <p>Plan a two-minute story, say it aloud, and practise a follow-up question.</p>
-          <a class="open-lesson" href="lessons/speaking/a-problem-you-solved.html" aria-label="Open lesson: A problem you solved">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="card" data-subject="Reading">
-          <span class="card-top"><span class="tag">Reading</span><span class="folio" aria-hidden="true">05</span></span>
-          <h3><a class="card-title" href="lessons/reading/the-tool-library.html">The tool library</a></h3>
-          <p>Read a short report and decide which statements are true, false, or not given.</p>
-          <a class="open-lesson" href="lessons/reading/the-tool-library.html" aria-label="Open lesson: The tool library">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="card" data-subject="Listening">
-          <span class="card-top"><span class="tag">Listening</span><span class="folio" aria-hidden="true">06</span></span>
-          <h3><a class="card-title" href="lessons/listening/the-workshop-voicemail.html">The workshop voicemail</a></h3>
-          <p>Listen for a changed time and location, then check five details against the transcript.</p>
-          <a class="open-lesson" href="lessons/listening/the-workshop-voicemail.html" aria-label="Open lesson: The workshop voicemail">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="card" data-subject="IELTS writing">
-          <span class="card-top"><span class="tag">IELTS writing</span><span class="folio" aria-hidden="true">07</span></span>
-          <h3><a class="card-title" href="lessons/ielts-writing/working-from-home.html">Should employees choose where they work?</a></h3>
-          <p>Plan an opinion essay about remote work, then compare your draft with a full model.</p>
-          <a class="open-lesson" href="lessons/ielts-writing/working-from-home.html" aria-label="Open lesson: Should employees choose where they work?">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="card" data-subject="Grammar">
-          <span class="card-top"><span class="tag">Grammar</span><span class="folio" aria-hidden="true">08</span></span>
-          <h3><a class="card-title" href="lessons/grammar/prepositions.html">Prepositions of time</a></h3>
-          <p>Choose at, on, in, for, since, or by to describe times, durations, and deadlines.</p>
-          <a class="open-lesson" href="lessons/grammar/prepositions.html" aria-label="Open lesson: Prepositions of time">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="card" data-subject="Speaking">
-          <span class="card-top"><span class="tag">Speaking</span><span class="folio" aria-hidden="true">09</span></span>
-          <h3><a class="card-title" href="lessons/speaking/explaining-a-technical-issue.html">Explaining a technical issue</a></h3>
-          <p>Guide a colleague through a printing problem using plain English, then switch roles.</p>
-          <a class="open-lesson" href="lessons/speaking/explaining-a-technical-issue.html" aria-label="Open lesson: Explaining a technical issue">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="card" data-subject="IELTS writing">
-          <span class="card-top"><span class="tag">IELTS writing</span><span class="folio" aria-hidden="true">10</span></span>
-          <h3><a class="card-title" href="lessons/ielts-writing/cooking-at-school.html">Does cooking belong on the school timetable?</a></h3>
-          <p>Develop an argument for cooking classes and respond to a timetable objection.</p>
-          <a class="open-lesson" href="lessons/ielts-writing/cooking-at-school.html" aria-label="Open lesson: Does cooking belong on the school timetable?">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="card" data-subject="Grammar">
-          <span class="card-top"><span class="tag">Grammar</span><span class="folio" aria-hidden="true">11</span></span>
-          <h3><a class="card-title" href="lessons/grammar/past-perfect.html">The past perfect</a></h3>
-          <p>Use had and a past participle to make the order of two past events clear.</p>
-          <a class="open-lesson" href="lessons/grammar/past-perfect.html" aria-label="Open lesson: The past perfect">Open lesson <span aria-hidden="true">→</span></a>
-        </article>
         <article class="card card-writing" data-subject="IELTS writing">
-          <span class="card-top"><span class="tag">IELTS writing</span><span class="folio" aria-hidden="true">12</span></span>
+          <span class="card-top"><span class="tag">IELTS writing</span><span class="folio" aria-hidden="true">03</span></span>
           <h3><a class="card-title" href="job-satisfaction-typing.html">Job satisfaction or a high salary?</a></h3>
           <p>Type the model essay paragraph by paragraph or in full, with live feedback on accuracy and speed.</p>
           <a class="open-lesson" href="job-satisfaction-typing.html" aria-label="Open job satisfaction essay typing test">Start typing <span aria-hidden="true">→</span></a>
         </article>
       </div>
     </section>
-    <noscript><p>Enable JavaScript to save additional lessons in this browser.</p></noscript>
   </main>
   <footer class="shell end-mark"><span aria-hidden="true">✳</span> EnglishStudy</footer>
-  <dialog id="reader" aria-labelledby="reader-title"><header class="reader-bar"><h2 id="reader-title">Saved lesson</h2><button class="close-reader" type="button" id="reader-close">Back to shelf</button></header><iframe id="reader-frame" title="Saved lesson" sandbox="allow-scripts"></iframe></dialog>
 </body>
 </html>
