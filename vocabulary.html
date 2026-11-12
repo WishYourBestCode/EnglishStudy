@@ -376,6 +376,18 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.12;margin:13px 0 9px;letter-spac
   text-align:center;
   color:var(--muted);
 }
+
+.action:disabled{opacity:.48;cursor:not-allowed}
+.quiz-navigation{align-items:center;margin-top:12px}
+.quiz-nav-caption{font-size:13px;color:var(--muted);align-self:center}
+.finish-review{border-top:1px solid var(--line);padding-top:18px;margin-top:21px}
+.finish-review h3{margin:0 0 7px;font-size:20px}
+.finish-review p{margin:0;color:var(--muted)}
+.review-practice{margin-top:18px;border:1px solid var(--line);border-radius:17px;padding:20px;background:#f9faff}
+.review-practice h3{margin:0 0 5px}
+.review-practice .paragraph-box{margin-top:14px}
+.review-progress{font-size:14px;color:var(--muted)}
+.review-feedback-note{margin-top:9px;color:#536078}
 .toast{
   position:fixed;
   left:50%;
@@ -527,8 +539,12 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.12;margin:13px 0 9px;letter-spac
         <div class="button-row">
           <button class="action primary" onclick="checkParagraph()">Check Paragraph</button>
           <button id="hintButton" class="action ghost" onclick="showHint()">Show Hint</button>
-          <button class="action ghost" onclick="nextParagraph()">Next Paragraph</button>
           <button class="action ghost" onclick="showAnswers()">Show Answers</button>
+        </div>
+        <div class="button-row quiz-navigation" aria-label="Paragraph navigation">
+          <button id="previousParagraphButton" class="action ghost" onclick="previousParagraph()">← Previous Paragraph</button>
+          <button id="nextParagraphButton" class="action primary" onclick="nextParagraph()">Next Paragraph →</button>
+          <span class="quiz-nav-caption">You can move freely between paragraphs. Check every paragraph before finishing.</span>
         </div>
       </article>
 
@@ -558,9 +574,13 @@ h1{font-size:clamp(29px,4vw,45px);line-height:1.12;margin:13px 0 9px;letter-spac
 
     <section id="reviewView" class="view-card hidden">
       <h2>Mistake Review</h2>
-      <p>Incorrect and revealed answers appear here with the explanation you need to remember them.</p>
-      <div id="reviewList" class="review-list"></div>
-      <div id="reviewButtons" class="button-row"></div>
+      <p>Incorrect and revealed answers are saved here. Practise them again without resetting your quiz score. A phrase leaves the review list only after you type the correct answer in review practice.</p>
+      <div id="reviewOverview">
+        <div id="reviewCount" class="study-count" aria-live="polite"></div>
+        <div id="reviewList" class="review-list"></div>
+        <div id="reviewButtons" class="button-row"></div>
+      </div>
+      <section id="reviewPractice" class="review-practice hidden" aria-label="Practise mistakes"></section>
     </section>
   </main>
 
@@ -574,10 +594,14 @@ const DATA=[{"category":"General English","pair":"agree with","meaning":"agree w
 const CATEGORY_ORDER=["General English","Business English","IT & Technical","Customer & Client Service","Adjectives & Nouns"];
 const SETTINGS_KEY="pairing-phrases-v2-settings";
 const PROGRESS_KEY="pairing-phrases-v2-progress";
+const MISTAKE_KEY="pairing-phrases-v3-mistakes";
 
 let quizGroups=[];
 let currentGroupIndex=0;
 let results=new Map();
+let mistakeBank=new Map();
+let reviewQueue=[];
+let reviewIndex=0;
 let activeView="practice";
 let toastTimer=null;
 
@@ -688,12 +712,46 @@ function loadProgress(){
     });
   }catch(_){}
 }
+
+function saveMistakes(){
+  const compact=[...mistakeBank.values()].map(r=>({id:r.id,status:r.status,response:r.response||""}));
+  try{localStorage.setItem(MISTAKE_KEY,JSON.stringify(compact));}catch(_){}
+}
+function loadMistakes(){
+  try{
+    const saved=localStorage.getItem(MISTAKE_KEY);
+    const items=saved===null
+      ?[...results.values()].filter(r=>r.status==="wrong"||r.status==="revealed")
+      :JSON.parse(saved);
+    if(Array.isArray(items)){
+      items.forEach(r=>{
+        const item=DATA.find(x=>x.id===Number(r.id));
+        if(item && (r.status==="wrong"||r.status==="revealed"))
+          mistakeBank.set(item.id,{id:item.id,item,status:r.status,response:r.response||""});
+      });
+    }
+    if(saved===null)saveMistakes();
+  }catch(_){}
+}
+function trackMistake(id,item,status,response){
+  if(status!=="wrong"&&status!=="revealed")return;
+  mistakeBank.set(id,{id,item,status,response});
+  saveMistakes();
+}
+
 function resetProgress(){
   results.clear();
-  try{localStorage.removeItem(PROGRESS_KEY);}catch(_){}
+  mistakeBank.clear();
+  reviewQueue=[];
+  quizGroups=[];
+  currentGroupIndex=0;
+  try{localStorage.removeItem(PROGRESS_KEY);localStorage.removeItem(MISTAKE_KEY);}catch(_){}
+  document.getElementById("quizCard").classList.add("hidden");
+  document.getElementById("finishCard").classList.add("hidden");
+  document.getElementById("welcomeCard").classList.remove("hidden");
   updateStats();
   renderReview();
-  showToast("Saved quiz progress was reset.");
+  showToast("Saved quiz results and mistake practice were reset.");
 }
 function switchView(view){
   activeView=view;
@@ -719,6 +777,7 @@ function startQuiz(customItems=null){
   }
   currentGroupIndex=0;
   results.clear();
+  reviewQueue=[];
   saveProgress();
   switchView("practice");
   document.getElementById("welcomeCard").classList.add("hidden");
@@ -756,6 +815,8 @@ function renderParagraph(){
   document.getElementById("quizTitle").textContent=`Paragraph ${currentGroupIndex+1} of ${quizGroups.length} • Phrases ${group.items.map(x=>"#"+x.id).join(", ")}`;
   document.getElementById("blankCount").textContent=`${group.items.length} blank${group.items.length===1?"":"s"} in this paragraph`;
   document.getElementById("progressBar").style.width=`${((currentGroupIndex+1)/quizGroups.length)*100}%`;
+  document.getElementById("previousParagraphButton").disabled=currentGroupIndex===0;
+  document.getElementById("nextParagraphButton").textContent=currentGroupIndex===quizGroups.length-1?"Finish Quiz":"Next Paragraph →";
 
   const bankWrap=document.getElementById("bankWrap");
   bankWrap.classList.toggle("hidden",help==="challenge");
@@ -771,8 +832,7 @@ function renderParagraph(){
   document.getElementById("feedback").textContent="";
   document.getElementById("feedback").className="feedback";
   document.getElementById("feedbackDetails").innerHTML="";
-  document.getElementById("hintPanel").classList.add("hidden");
-  document.getElementById("hintButton").textContent=group.hintShown?"Hide Hint":"Show Hint";
+  updateHintPanel(group);
   if(group.checked)refreshFeedback(group);
   setTimeout(()=>{
     const first=document.querySelector("#paragraphBox .inline-blank:not(.correct):not(.revealed)");
@@ -783,9 +843,18 @@ function recordResponse(input){
   const group=quizGroups[currentGroupIndex];
   const id=Number(input.dataset.id);
   group.responses[id]=input.value;
-  if(group.statuses[id]==="wrong"){
-    input.classList.remove("wrong");
+  if(group.statuses[id]){
+    group.statuses[id]="";
+    group.checked=false;
+    results.delete(id);
+    saveProgress();
+    updateStats();
+    input.className="inline-blank";
     input.parentElement.querySelector(".correction").textContent="";
+    const feedback=document.getElementById("feedback");
+    feedback.className="feedback info";
+    feedback.textContent="Answer updated. Check this paragraph again.";
+    document.getElementById("feedbackDetails").innerHTML="";
   }
 }
 function handleBlankKey(event,input){
@@ -812,11 +881,14 @@ function checkParagraph(){
     const item=group.items.find(x=>x.id===id);
     const response=input.value;
     const ok=normalize(response)===normalize(item.prep);
+    // Revealed answers require retyping before they can count as correct.
+    const status=group.statuses[id]==="revealed"?"revealed":(ok?"correct":"wrong");
     group.responses[id]=response;
-    group.statuses[id]=ok?"correct":"wrong";
-    results.set(id,{id,item,status:ok?"correct":"wrong",response});
-    input.className=`inline-blank ${ok?"correct":"wrong"}`;
-    input.parentElement.querySelector(".correction").textContent=ok?"":`Correct: ${item.prep}`;
+    group.statuses[id]=status;
+    results.set(id,{id,item,status,response});
+    trackMistake(id,item,status,response);
+    input.className="inline-blank "+status;
+    input.parentElement.querySelector(".correction").textContent=status==="wrong"?"Correct: "+item.prep:"";
   });
   group.checked=true;
   saveProgress();
@@ -848,19 +920,23 @@ function refreshFeedback(group){
     ${item.warning?`<div style="margin-top:4px">${escapeHtml(item.warning)}</div>`:""}</div>
   `).join("");
 }
-function showHint(){
-  if(!quizGroups.length)return;
-  const group=quizGroups[currentGroupIndex];
-  group.hintShown=!group.hintShown;
+function updateHintPanel(group){
   const panel=document.getElementById("hintPanel");
   const btn=document.getElementById("hintButton");
   panel.classList.toggle("hidden",!group.hintShown);
   btn.textContent=group.hintShown?"Hide Hint":"Show Hint";
   if(group.hintShown){
-    panel.innerHTML=`<h3>Hint: first letter + answer length</h3><ol class="hint-list">${
-      group.items.map(item=>`<li><b>${escapeHtml(item.head)} ___</b>: starts with <b>${escapeHtml(item.prep[0].toUpperCase())}</b>, ${item.prep.length} letter${item.prep.length===1?"":"s"} — ${escapeHtml(item.meaning)}.</li>`).join("")
-    }</ol>`;
+    panel.innerHTML='<h3>Hint: first letter + answer length</h3><ol class="hint-list">'+
+      group.items.map(item=>'<li><b>'+escapeHtml(item.head)+' ___</b>: starts with <b>'+
+      escapeHtml(item.prep[0].toUpperCase())+'</b>, '+item.prep.length+
+      ' letter'+(item.prep.length===1?'':'s')+' — '+escapeHtml(item.meaning)+'.</li>').join("")+'</ol>';
   }
+}
+function showHint(){
+  if(!quizGroups.length)return;
+  const group=quizGroups[currentGroupIndex];
+  group.hintShown=!group.hintShown;
+  updateHintPanel(group);
 }
 function showAnswers(){
   if(!quizGroups.length)return;
@@ -876,25 +952,33 @@ function showAnswers(){
     group.responses[id]=item.prep;
     group.statuses[id]=alreadyCorrect?"correct":"revealed";
     results.set(id,{id,item,status:group.statuses[id],response:item.prep});
+    if(!alreadyCorrect)trackMistake(id,item,"revealed",item.prep);
   });
   group.checked=true;
   saveProgress();
   refreshFeedback(group);
   updateStats();
 }
+function previousParagraph(){
+  if(!quizGroups.length||currentGroupIndex===0)return;
+  currentGroupIndex--;
+  renderParagraph();
+  window.scrollTo({top:document.getElementById("quizCard").offsetTop-12,behavior:"smooth"});
+}
 function nextParagraph(){
   if(!quizGroups.length)return;
-  const group=quizGroups[currentGroupIndex];
-  if(!group.checked){
-    showToast("Check the paragraph or show the answers before moving on.");
-    const first=document.querySelector("#paragraphBox .inline-blank");
-    if(first)first.focus();
-    return;
-  }
+  if(currentGroupIndex===quizGroups.length-1){finishQuiz();return;}
   currentGroupIndex++;
-  if(currentGroupIndex>=quizGroups.length)finishQuiz();
-  else renderParagraph();
+  renderParagraph();
   window.scrollTo({top:document.getElementById("quizCard").offsetTop-12,behavior:"smooth"});
+}
+function returnToQuiz(){
+  if(!quizGroups.length)return;
+  document.getElementById("finishCard").classList.add("hidden");
+  document.getElementById("quizCard").classList.remove("hidden");
+  currentGroupIndex=quizGroups.length-1;
+  switchView("practice");
+  renderParagraph();
 }
 function updateStats(){
   const values=[...results.values()];
@@ -911,6 +995,16 @@ function updateStats(){
   document.getElementById("scoreStat").textContent=(attempted?Math.round(correct/attempted*100):0)+"%";
 }
 function finishQuiz(){
+  if(!quizGroups.length)return;
+  const unfinished=quizGroups.findIndex(group=>!group.checked);
+  if(unfinished!==-1){
+    currentGroupIndex=unfinished;
+    document.getElementById("finishCard").classList.add("hidden");
+    document.getElementById("quizCard").classList.remove("hidden");
+    renderParagraph();
+    showToast("Check each paragraph before finishing. Returned to the first unchecked paragraph.");
+    return;
+  }
   document.getElementById("quizCard").classList.add("hidden");
   const card=document.getElementById("finishCard");
   card.classList.remove("hidden");
@@ -931,10 +1025,17 @@ function finishQuiz(){
       <div class="score-box">Answers shown<b>${revealed}</b></div>
     </div>
     <div class="button-row">
-      <button class="action primary" onclick="retryMistakes()">Retry Mistakes</button>
+      <button class="action ghost" onclick="returnToQuiz()">← Back to Quiz</button>
       <button class="action ghost" onclick="startQuiz()">Start New Quiz</button>
-      <button class="action ghost" onclick="switchView('review')">Open Mistake Review</button>
       <button class="action ghost" onclick="switchView('study')">Open Detailed List</button>
+    </div>
+    <div class="finish-review">
+      <h3>Review your incorrect answers</h3>
+      <p>${mistakeBank.size?mistakeBank.size+' saved phrase'+(mistakeBank.size===1?'':'s')+' to practise again.': 'All saved mistakes have been mastered.'} Your quiz score will not change during review practice.</p>
+      <div class="button-row">
+        <button class="action primary" onclick="retryMistakes()" ${mistakeBank.size?'':'disabled'}>Practise Incorrect Answers</button>
+        <button class="action ghost" onclick="switchView('review')">Open Mistake Review</button>
+      </div>
     </div>`;
   renderReview();
 }
@@ -996,37 +1097,158 @@ function toggleAllDetails(open){
   document.querySelectorAll("#studyList details").forEach(x=>x.open=open);
 }
 function renderReview(){
-  const list=[...results.values()].filter(r=>r.status!=="correct").sort((a,b)=>a.id-b.id);
+  const overview=document.getElementById("reviewOverview");
+  const practice=document.getElementById("reviewPractice");
+  const practising=reviewQueue.length>0;
+  overview.classList.toggle("hidden",practising);
+  practice.classList.toggle("hidden",!practising);
+  if(practising){renderMistakePractice();return;}
+  const list=[...mistakeBank.values()].sort((a,b)=>a.id-b.id);
   const container=document.getElementById("reviewList");
   const buttons=document.getElementById("reviewButtons");
+  document.getElementById("reviewCount").textContent=list.length+
+    " phrase"+(list.length===1?"":"s")+" remaining to practise";
   if(!list.length){
-    container.innerHTML=`<div class="empty-state">No mistakes are saved yet. Complete a paragraph quiz, and incorrect or revealed phrases will appear here.</div>`;
-    buttons.innerHTML="";
+    container.innerHTML='<div class="empty-state">No mistakes to review. Complete a quiz, or keep practising new phrases.</div>';
+    buttons.innerHTML='<button class="action ghost" onclick="switchView(\'practice\')">Return to Quiz</button>';
     return;
   }
   container.innerHTML=list.map(r=>{
     const item=r.item;
-    return `<article class="review-card">
-      <h3>#${item.id} — ${escapeHtml(item.pair)}</h3>
-      <p><b>Your result:</b> ${r.status==="revealed"?"Answer shown":`“${escapeHtml(r.response||"")}”`}</p>
-      <p><b>Meaning:</b> ${escapeHtml(item.meaning)}.</p>
-      <p><b>Pattern:</b> ${escapeHtml(item.pattern)}</p>
-      <p class="example"><b>Example:</b> ${markedExample(item)}</p>
-      <p><b>Memory:</b> ${escapeHtml(item.memory)}</p>
-      ${item.warning?`<div class="warning-box"><b>Usage note:</b> ${escapeHtml(item.warning)}</div>`:""}
-    </article>`;
+    return '<article class="review-card">'+
+      '<h3>#'+item.id+' — '+escapeHtml(item.pair)+'</h3>'+
+      '<p><b>Saved result:</b> '+(r.status==="revealed"?'Answer shown':'“'+escapeHtml(r.response||"")+'”')+'</p>'+
+      '<p><b>Meaning:</b> '+escapeHtml(item.meaning)+'.</p>'+
+      '<p><b>Pattern:</b> '+escapeHtml(item.pattern)+'</p>'+
+      '<p class="example"><b>Example:</b> '+markedExample(item)+'</p>'+
+      '<p><b>Memory:</b> '+escapeHtml(item.memory)+'</p>'+
+      (item.warning?'<div class="warning-box"><b>Usage note:</b> '+escapeHtml(item.warning)+'</div>':'')+
+    '</article>';
   }).join("");
-  buttons.innerHTML=`
-    <button class="action primary" onclick="retryMistakes()">Retry These Phrases</button>
-    <button class="action ghost" onclick="switchView('study')">Study Full Explanations</button>
-    <button class="action ghost" onclick="resetProgress()">Clear Review</button>`;
+  buttons.innerHTML='<button class="action primary" onclick="startMistakePractice()">Practise These Phrases</button>'+
+    '<button class="action ghost" onclick="switchView(\'study\')">Study Full Explanations</button>'+
+    '<button class="action ghost" onclick="switchView(\'practice\')">Return to Quiz</button>';
 }
-function retryMistakes(){
-  const items=[...results.values()].filter(r=>r.status!=="correct").map(r=>r.item);
-  const unique=[...new Map(items.map(x=>[x.id,x])).values()];
-  if(!unique.length){showToast("There are no saved mistakes to retry.");return}
-  document.getElementById("paragraphCount").value="all";
-  startQuiz(unique);
+function retryMistakes(){startMistakePractice();}
+function startMistakePractice(){
+  const items=[...mistakeBank.values()].sort((a,b)=>a.id-b.id);
+  if(!items.length){
+    switchView("review");
+    showToast("No saved mistakes remain. Great work!");
+    return;
+  }
+  reviewQueue=items.map(r=>({item:r.item,answer:"",status:""}));
+  reviewIndex=0;
+  switchView("review");
+}
+function renderMistakePractice(){
+  if(!reviewQueue.length)return;
+  const entry=reviewQueue[reviewIndex];
+  const item=entry.item;
+  const parts=item.cloze.split(/\[\[.*?\]\]/);
+  const width=Math.max(68,Math.min(145,item.prep.length*18+45));
+  const mastered=reviewQueue.filter(e=>e.status==="correct").length;
+  const correct=entry.status==="correct";
+  const wrong=entry.status==="wrong";
+  const revealed=entry.status==="revealed";
+  let feedback="";
+  if(correct){
+    feedback='<div class="feedback good">Correct! You mastered this phrase.</div>';
+  }else if(wrong||revealed){
+    feedback='<div class="feedback '+(wrong?'bad':'info')+'">'+
+      (wrong?'Not quite. ':'Answer revealed. ')+'Correct answer: '+escapeHtml(item.prep)+'.</div>'+
+      '<div class="review-feedback-note">'+escapeHtml(item.memory)+'</div>';
+  }else{
+    feedback='<div class="feedback info">Type the missing paired word, then check your answer.</div>';
+  }
+  const practice=document.getElementById("reviewPractice");
+  practice.innerHTML=
+    '<div class="review-progress">Phrase '+(reviewIndex+1)+' of '+reviewQueue.length+
+    ' · '+mastered+' mastered in this round · '+mistakeBank.size+' still saved</div>'+
+    '<h3>#'+item.id+' — '+escapeHtml(item.head)+' ___</h3>'+
+    '<p>'+escapeHtml(item.meaning)+'</p>'+
+    '<div class="paragraph-box">'+escapeHtml(parts[0])+
+      '<span class="blank-wrap"><input id="reviewAnswer" class="inline-blank '+(entry.status||'')+
+        '" style="width:'+width+'px" aria-label="Missing paired word for '+escapeHtml(item.head)+
+        '" autocomplete="off" autocapitalize="none" spellcheck="false" value="'+escapeHtml(entry.answer)+
+        '" oninput="updateReviewInput(this)" onkeydown="if(event.key===\'Enter\'){event.preventDefault();checkReviewAnswer()}">'+
+      '</span>'+escapeHtml(parts[1]||"")+'</div>'+
+    feedback+
+    '<div class="button-row">'+
+      '<button class="action ghost" onclick="previousReviewMistake()" '+(reviewIndex===0?'disabled':'')+'>← Previous</button>'+
+      '<button class="action primary" onclick="checkReviewAnswer()">Check Answer</button>'+
+      '<button class="action ghost" onclick="revealReviewAnswer()">Show Answer</button>'+
+      '<button class="action ghost" onclick="nextReviewMistake()">'+
+        (reviewIndex===reviewQueue.length-1?'Finish Review':'Next →')+'</button>'+
+      '<button class="action ghost" onclick="stopMistakePractice()">Back to Review List</button>'+
+    '</div>';
+}
+function updateReviewInput(input){
+  const entry=reviewQueue[reviewIndex];
+  entry.answer=input.value;
+  if(entry.status){
+    // Previously mastered phrases must be checked again after an edit.
+    if(entry.status==="correct" && normalize(entry.answer)!==normalize(entry.item.prep)){
+      trackMistake(entry.item.id,entry.item,"wrong",entry.answer);
+    }
+    entry.status="";
+    input.className="inline-blank";
+    const practice=document.getElementById("reviewPractice");
+    const feedback=practice.querySelector(".feedback");
+    if(feedback){feedback.className="feedback info";feedback.textContent="Answer edited. Check again.";}
+    const detail=practice.querySelector(".review-feedback-note");
+    if(detail)detail.textContent="";
+  }
+}
+function checkReviewAnswer(){
+  if(!reviewQueue.length)return;
+  const entry=reviewQueue[reviewIndex];
+  const input=document.getElementById("reviewAnswer");
+  if(!input||!input.value.trim()){
+    showToast("Type a word before checking, or choose Show Answer.");
+    if(input)input.focus();
+    return;
+  }
+  entry.answer=input.value;
+  if(normalize(entry.answer)===normalize(entry.item.prep)){
+    entry.status="correct";
+    mistakeBank.delete(entry.item.id);
+    saveMistakes();
+  }else{
+    entry.status="wrong";
+    trackMistake(entry.item.id,entry.item,"wrong",entry.answer);
+  }
+  renderMistakePractice();
+}
+function revealReviewAnswer(){
+  if(!reviewQueue.length)return;
+  const entry=reviewQueue[reviewIndex];
+  if(entry.status!=="correct"){
+    entry.status="revealed";
+    trackMistake(entry.item.id,entry.item,"revealed",entry.answer);
+  }
+  renderMistakePractice();
+}
+function previousReviewMistake(){
+  if(reviewIndex===0)return;
+  reviewIndex--;
+  renderMistakePractice();
+}
+function nextReviewMistake(){
+  if(reviewIndex<reviewQueue.length-1){
+    reviewIndex++;
+    renderMistakePractice();
+  }else{
+    const mastered=reviewQueue.filter(e=>e.status==="correct").length;
+    const total=reviewQueue.length;
+    stopMistakePractice();
+    showToast("Review finished: "+mastered+"/"+total+" mastered. "+mistakeBank.size+" still saved.");
+  }
+}
+function stopMistakePractice(){
+  reviewQueue=[];
+  reviewIndex=0;
+  renderReview();
 }
 function showToast(message){
   const toast=document.getElementById("toast");
@@ -1047,6 +1269,7 @@ document.getElementById("studyLevel").addEventListener("change",renderStudyList)
 
 loadSettings();
 loadProgress();
+loadMistakes();
 updateStats();
 renderReview();
 </script>
