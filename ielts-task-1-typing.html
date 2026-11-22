@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#174f49">
+<title>Working from home · IELTS Task 1 typing practice</title>
+<style>
+:root{color-scheme:light;--ink:#193b37;--green:#174f49;--paper:#faf7ef;--line:#d7ded6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 system-ui,sans-serif}
+main{max-width:1000px;margin:auto;padding:28px 24px 64px}
+a{color:var(--green)}
+.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;font-weight:700;margin:36px 0 8px}
+h1{font:clamp(2rem,5vw,3.6rem)/1.12 Georgia,serif;margin:0 0 16px}
+h2{font-size:1rem;margin:0 0 14px}
+.intro{max-width:700px;color:#4e635e}
+.task{background:#fffdf8;border:1px solid var(--line);border-radius:12px;padding:20px;margin:24px 0}
+table{border-collapse:collapse;width:100%;margin:12px 0}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line)}
+th{background:#edf3ed}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:26px 0 18px}
+select,button,textarea{font:inherit}
+select,button{border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:white;color:var(--ink)}
+button{cursor:pointer;font-weight:600}
+button.primary{background:var(--green);color:white;border-color:var(--green)}
+button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:3px solid #b27526;outline-offset:3px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.stat{border:1px solid var(--line);border-radius:12px;padding:14px 18px;background:#fffdf8}
+.stat strong{display:block;font-size:1.7rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:#52665f}
+.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:24px;margin-top:20px}
+#reference{font:19px/1.95 Georgia,serif;overflow-wrap:anywhere;max-height:360px;overflow:auto;padding:4px}
+.correct{color:#1d6551;background:#eaf5ed}
+.wrong{color:#9d2020;background:#ffe2de;text-decoration:underline wavy}
+.current{border-bottom:3px solid #b27526;background:#fff2c9}
+.legend,.hint{font-size:.85rem;color:#52665f}
+.legend{margin-bottom:0}
+label[for=typing]{display:block;font-weight:650;margin-bottom:10px}
+textarea{display:block;width:100%;min-height:210px;border:1px solid #879c92;border-radius:8px;padding:16px;line-height:1.7;resize:vertical;background:#fffefb;color:#193b37}
+progress{width:100%;height:10px;accent-color:var(--green)}
+#message{min-height:1.7em;font-weight:600}
+footer{font-size:.8rem;color:#52665f;margin-top:30px}
+@media(max-width:550px){main{padding:20px 16px 40px}.stats{grid-template-columns:repeat(2,1fr)}.panel{padding:16px}.controls select{width:100%}#reference{max-height:280px}th,td{padding:7px 6px;font-size:.9rem}}
+</style>
+</head>
+<body>
+<main>
+<a href="index.html">← EnglishStudy library</a>
+<p class="eyebrow">IELTS Writing Task 1 · Type and learn</p>
+<h1>Working from home</h1>
+<p class="intro">Review the table and practise the model answer one paragraph at a time, or type the full response. Focus on accurate sentences before speed.</p>
+
+<section class="task" aria-labelledby="task-title">
+<h2 id="task-title">Practice task</h2>
+<p>The table shows the percentage of employees who worked from home in three industries in 2015, 2020, and 2025.</p>
+<table>
+<thead><tr><th scope="col">Industry</th><th scope="col">2015</th><th scope="col">2020</th><th scope="col">2025</th></tr></thead>
+<tbody>
+<tr><th scope="row">Information technology</th><td>20%</td><td>55%</td><td>65%</td></tr>
+<tr><th scope="row">Education</th><td>10%</td><td>40%</td><td>50%</td></tr>
+<tr><th scope="row">Retail</th><td>5%</td><td>15%</td><td>20%</td></tr>
+</tbody>
+</table>
+<p><strong>Task:</strong> Summarize the information by selecting and reporting the main features, and make comparisons where relevant. Write at least 150 words.</p>
+<p><strong>Suggested time:</strong> 20 minutes</p>
+</section>
+
+<div class="controls">
+<label for="mode">Practice</label>
+<select id="mode">
+<option value="0">1 · Introduction</option>
+<option value="1">2 · Overall trend</option>
+<option value="2">3 · IT and education</option>
+<option value="3">4 · Retail and comparison</option>
+<option value="all">Full model answer</option>
+</select>
+<button id="restart" type="button">Restart</button>
+<button class="primary" id="next" type="button" disabled>Next paragraph →</button>
+</div>
+
+<div class="stats" aria-label="Typing statistics">
+<div class="stat"><strong id="wpm">0</strong><span>Words / minute</span></div>
+<div class="stat"><strong id="accuracy">—</strong><span>Current text accuracy</span></div>
+<div class="stat"><strong id="elapsed">0:00</strong><span>Elapsed time</span></div>
+<div class="stat"><strong id="completion">0%</strong><span>Correct characters</span></div>
+</div>
+<progress id="progress" value="0" max="100" aria-label="Correct characters progress"></progress>
+
+<section class="panel" aria-labelledby="reference-title">
+<h2 id="reference-title">Model answer · text to type <span id="word-count"></span></h2>
+<div id="reference" tabindex="0" aria-label="Reference answer text"></div>
+<p class="legend">Green = correct · Red underline = mismatch · Gold underline = next character</p>
+</section>
+
+<section class="panel">
+<label for="typing">Your typing</label>
+<textarea id="typing" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="instructions message" placeholder="Start typing the model answer above…"></textarea>
+<p class="hint" id="instructions">The timer starts with your first character. Use Backspace to correct mistakes. Line breaks and extra spaces are treated as spaces. Pasting is disabled for practice.</p>
+<p id="message" role="status" aria-live="polite">Ready when you are.</p>
+</section>
+
+<footer>Speed is based on five characters per word. Accuracy updates as you correct your typing. This exercise practises typing and does not assess your IELTS band score.</footer>
+</main>
+<script>
+'use strict';
+const paragraphs = [
+"The table compares the percentages of employees who worked from home in the IT, education, and retail industries in 2015, 2020, and 2025.",
+"Overall, the percentage increased in all three industries. IT had the highest proportion of remote workers throughout the period, while retail had the lowest.",
+"In IT, the figure rose from 20% in 2015 to 55% in 2020, then increased by a further 10 percentage points to 65% in 2025. Education also saw a substantial rise, from 10% in 2015 to 40% in 2020. By 2025, the proportion had reached 50%.",
+"Retail had the smallest percentages in each year. The share of retail employees working from home grew from 5% in 2015 to 15% in 2020, before reaching 20% in 2025. Although all three industries experienced an increase, IT remained ahead of education and retail in every year shown."
+];
+const get = id => document.getElementById(id);
+const normalize = text => text.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
+let target='', started=null, finished=null, ticker=null, correct=0, spans=[];
+function updateClock(){
+ const seconds=started===null?0:((finished===null?performance.now():finished)-started)/1000;
+ get('elapsed').textContent=Math.floor(seconds/60)+':'+String(Math.floor(seconds%60)).padStart(2,'0');
+ get('wpm').textContent=seconds>0?Math.round((correct/5)/(Math.max(seconds,1)/60)):0;
+}
+function reset(){
+ clearInterval(ticker);ticker=null;started=null;finished=null;correct=0;
+ const selected=get('mode').value;
+ const display=selected==='all'?paragraphs.join(' '):paragraphs[Number(selected)];
+ target=normalize(display);
+ const fragment=document.createDocumentFragment();
+ spans=Array.from(target,character=>{const span=document.createElement('span');span.textContent=character;fragment.append(span);return span;});
+ get('reference').replaceChildren(fragment);get('reference').scrollTop=0;
+ get('typing').value='';get('typing').disabled=false;
+ get('accuracy').textContent='—';get('completion').textContent='0%';get('progress').value=0;
+ get('word-count').textContent='· '+target.split(' ').length+' words';
+ get('message').textContent='Ready when you are.';get('next').disabled=true;
+ if(spans[0])spans[0].className='current';
+ updateClock();
+}
+get('typing').addEventListener('input',()=>{
+ const typed=normalize(get('typing').value);
+ if(started===null&&typed.length){started=performance.now();ticker=setInterval(updateClock,250);}
+ correct=0;
+ spans.forEach((span,i)=>{
+  const matches=i<typed.length&&typed[i]===target[i];if(matches)correct++;
+  span.className=i<typed.length?(matches?'correct':'wrong'):(i===typed.length?'current':'');
+ });
+ get('accuracy').textContent=typed.length?Math.round(correct/typed.length*100)+'%':'—';
+ const progress=Math.floor(correct/target.length*100);get('completion').textContent=progress+'%';get('progress').value=progress;
+ const errors=typed.length-correct;
+ get('message').textContent=errors?errors+' mismatched or extra character'+(errors===1?'':'s')+'. Use Backspace to correct.':(typed.length?'Keep going — your text matches so far.':'Ready when you are.');
+ if(typed===target){
+  finished=performance.now();clearInterval(ticker);get('typing').disabled=true;
+  get('next').disabled=get('mode').value==='all'||Number(get('mode').value)===paragraphs.length-1;
+  get('message').textContent='Complete! Every character matches. Restart or choose another section.';
+ }
+ updateClock();
+ const active=spans[Math.min(typed.length,spans.length-1)];
+ if(active){const box=get('reference');const y=active.getBoundingClientRect().top-box.getBoundingClientRect().top;if(y>box.clientHeight-40||y<0)box.scrollTop+=y-60;}
+});
+for(const event of ['paste','drop'])get('typing').addEventListener(event,e=>{e.preventDefault();get('message').textContent='Type the text yourself to practise; pasting and dropping text are disabled.';});
+get('restart').addEventListener('click',()=>{reset();get('typing').focus();});
+get('mode').addEventListener('change',reset);
+get('next').addEventListener('click',()=>{
+ const n=Number(get('mode').value);
+ if(Number.isInteger(n)&&n<paragraphs.length-1){get('mode').value=String(n+1);reset();get('typing').focus();}
+});
+reset();
+</script>
+</body>
+</html>
