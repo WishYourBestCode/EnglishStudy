@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#174f49">
+<meta name="description" content="A simple Windows domain and DNS command reference: nltest, ipconfig, nslookup, Group Policy, PowerShell and hybrid node types.">
+<title>Windows domain &amp; DNS · EnglishStudy</title>
+<style>
+:root{color-scheme:light;--ink:#25332f;--teal:#174f49;--muted:#546760;--ivory:#f8f6ef;--paper:#fffdf7;--line:#c9cec1;--rust:#804322;--sans:system-ui,-apple-system,"Segoe UI",sans-serif;--serif:Georgia,"Times New Roman",serif;--mono:Consolas,"Liberation Mono",monospace}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--ivory);color:var(--ink);font:1rem/1.6 var(--sans)}a{color:var(--teal);text-underline-offset:3px}button,input{font:inherit}button{cursor:pointer}button,a,input{touch-action:manipulation}:focus-visible{outline:3px solid #b65b2d;outline-offset:4px}.shell{width:min(1100px,calc(100% - 48px));margin-inline:auto}.skip{position:absolute;z-index:4;top:8px;left:8px;transform:translateY(-160%);background:var(--paper);padding:10px}.skip:focus{transform:none}.js-only{display:none}.js .js-only{display:inline-flex}.site-header{border-bottom:1px solid var(--line)}.masthead{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font:700 1.45rem/1 var(--serif);letter-spacing:-.045em;text-decoration:none;display:flex;align-items:center;gap:11px}.brand svg{flex:none}.back-link{font-size:.86rem;font-weight:650;text-decoration:none}.back-link:hover{text-decoration:underline}.intro{padding:48px 0 30px}.eyebrow{margin:0 0 12px;color:var(--teal);font-size:.75rem;font-weight:750;letter-spacing:.14em;text-transform:uppercase}h1,h2,h3{font-family:var(--serif);line-height:1.12}h1{font-size:clamp(2.7rem,6vw,4.6rem);font-weight:500;letter-spacing:-.055em;margin:0;max-width:880px}.dot{color:#a9673f}.intro-copy{color:var(--muted);font-size:1.08rem;max-width:650px;margin:18px 0 20px}.intro-foot{display:flex;align-items:center;justify-content:space-between;gap:15px}.meta{color:var(--muted);font-size:.8rem}.print{background:var(--paper);border:1px solid var(--line);color:var(--teal);border-radius:6px;padding:8px 14px;font-size:.85rem;font-weight:650}.examples{border:1px solid var(--line);border-left:4px solid var(--teal);background:var(--paper);padding:18px 22px;border-radius:4px}.examples h2{font-family:var(--sans);font-size:.9rem;margin:0 0 10px}.example-values{display:flex;flex-wrap:wrap;gap:14px 28px;font-size:.85rem}.example-values span{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.example-values code{background:#eaf0e5;color:var(--teal);padding:3px 7px;border-radius:4px;font-size:.88rem}.examples p{font-size:.82rem;color:var(--muted);margin:12px 0 0}.guide{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:26px 0 30px;padding-bottom:28px;border-bottom:1px solid var(--line)}.guide h2{font-size:1.35rem;letter-spacing:-.025em;font-weight:500;margin:0 0 10px}.guide ol{padding-left:22px;margin:0;font-size:.89rem;color:var(--muted)}.guide li+li{margin-top:5px}.guide p{font-size:.89rem;color:var(--muted);margin:0 0 8px}.guide code,.note code{font-family:var(--mono)}.controls{padding:0 0 20px;border-bottom:1px solid var(--line)}.js .controls{display:block}.search-row{display:flex;align-items:end;gap:16px;justify-content:space-between}.search-field{display:block;flex:1;max-width:590px}.search-field>span{display:block;font-size:.8rem;font-weight:700;margin-bottom:6px}input[type=search]{display:block;width:100%;padding:12px 14px;background:var(--paper);border:1px solid #8e9d91;border-radius:6px;color:var(--ink);min-height:46px}input::placeholder{color:#66746c}.result-count{font-size:.8rem;color:var(--muted);padding-bottom:11px;white-space:nowrap}.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.filter{background:transparent;border:1px solid var(--line);border-radius:20px;padding:7px 14px;color:var(--muted);font-size:.83rem;font-weight:650;min-height:38px}.filter[aria-pressed=true]{background:var(--teal);color:#fffdf7;border-color:var(--teal)}.filter:hover{border-color:var(--teal)}.command-section{scroll-margin-top:20px;margin-top:34px}.section-heading{display:flex;align-items:baseline;gap:15px;margin-bottom:16px}.section-number{font:italic 1.15rem var(--serif);color:var(--rust);flex:none}.section-heading h2{font-weight:500;font-size:1.9rem;letter-spacing:-.035em;margin:0 0 7px}.section-heading p{color:var(--muted);font-size:.89rem;margin:0}.command-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.reference-card{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:22px 23px 18px;display:flex;flex-direction:column;scroll-margin-top:24px}.card-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.shell-label{font-size:.73rem;font-weight:700;color:var(--teal)}.badge{font-size:.67rem;font-weight:700;background:#f1e5d5;color:#784420;padding:3px 7px;border-radius:4px}.reference-card h3{font-size:1.55rem;letter-spacing:-.025em;font-weight:500;margin:16px 0 8px}.purpose{font-size:.92rem;margin:0 0 16px;color:var(--muted)}.command-box{border-radius:5px;background:#183b35;color:#f8f8ed;margin:0 0 17px;overflow:hidden}.command-bar{min-height:37px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 12px;border-bottom:1px solid #426057}.command-bar>span{font-size:.6rem;color:#c5d8cc;letter-spacing:.14em;font-weight:700}.copy{align-items:center;border:1px solid #779188;border-radius:4px;color:#f8f8ed;background:transparent;padding:3px 10px;font-size:.73rem;min-height:28px}.copy:hover{background:#2b5449}.command-box pre{margin:0;padding:14px 15px 17px;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font: .89rem/1.7 var(--mono)}.command-box code{font:inherit}.look{font-size:.87rem;margin:0 0 10px}.look>strong{display:block;color:var(--teal);font-size:.72rem;letter-spacing:.03em;margin-bottom:3px}.note{margin:0 0 16px;color:var(--muted);font-size:.83rem;line-height:1.6}.card-source{font-size:.72rem;color:var(--muted);margin:auto 0 0;padding-top:10px;border-top:1px solid #e0e3d8}.card-source a{color:var(--muted)}.hybrid-steps{background:#eaf0e5;padding:15px 17px;border-radius:5px;margin:0 0 16px;display:grid;gap:13px}.hybrid-steps>div{display:grid;grid-template-columns:27px 1fr;column-gap:9px;align-items:center}.hybrid-steps span{width:25px;height:25px;border:1px solid #789c88;border-radius:50%;display:grid;place-items:center;font-size:.75rem;grid-row:span 2;color:var(--teal)}.hybrid-steps strong{font-size:.89rem;color:var(--teal)}.hybrid-steps small{font-size:.78rem;color:var(--muted)}.empty{padding:30px 18px;text-align:center;border:1px dashed var(--line);margin:28px 0}.empty p{margin:0 0 12px}.reset{background:var(--teal);color:white;border:0;padding:8px 14px;border-radius:5px}.corrections{margin:38px 0 0;border:1px solid var(--line);border-radius:5px;background:var(--paper)}.corrections summary{cursor:pointer;padding:16px 20px;color:var(--teal);font-size:.9rem;font-weight:700}.correction-inner{padding:0 20px 18px}.correction-inner p{font-size:.86rem;color:var(--muted);margin:6px 0}.correction-inner code{font-family:var(--mono);font-size:.85rem;overflow-wrap:anywhere}.end-mark{margin:32px auto 0;padding:18px 0 30px;border-top:1px solid var(--line);font-size:.77rem;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}.end-mark p{margin:0}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:6px;background:#173d35;color:#fffdf7;max-width:min(460px,calc(100% - 30px));font-size:.86rem;box-shadow:0 5px 22px #0002;z-index:3}.toast:empty{display:none}.no-js{font-size:.82rem;color:var(--muted)}
+@media(max-width:720px){.shell{width:calc(100% - 32px)}.masthead{min-height:66px}.brand{font-size:1.3rem}.brand svg{width:29px;height:29px}.back-link{font-size:.77rem}.intro{padding-top:32px}.intro-foot{align-items:flex-start}.meta{max-width:230px}.guide,.command-grid{grid-template-columns:1fr}.guide{gap:19px}.reference-card{padding:19px 19px 16px}.search-row{display:block}.result-count{display:block;padding:10px 0 0}.example-values{flex-direction:column;gap:10px}.examples{padding:16px 18px}.filter{padding:7px 11px}.section-heading h2{font-size:1.7rem}.section-heading{gap:11px}.command-section{margin-top:27px}}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media print{body{background:white;color:#111;font-size:10pt}.shell{width:100%;max-width:none}.site-header,.print,.controls,.copy,.toast,.back-link,.corrections,.no-js{display:none!important}.intro{padding:0 0 12px}h1{font-size:29pt}.intro-copy{font-size:11pt;margin:9px 0}.examples{padding:10px}.guide{margin:14px 0;padding-bottom:12px}.command-section{display:block!important;margin-top:20px}.reference-card{display:flex!important;break-inside:avoid;padding:13px}.command-grid{display:block}.reference-card{margin-bottom:12px}.reference-card h3{font-size:16pt}.command-box{background:#f3f5f2;color:#111;border:1px solid #aebbb3}.command-bar{border-color:#aebbb3}.command-bar>span{color:#333}.section-heading p,.purpose,.note,.look{font-size:9pt}.card-source{font-size:8pt}.end-mark{font-size:8pt}.empty{display:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#reference">Skip to commands</a>
+<header class="site-header"><div class="shell masthead"><a class="brand" href="../../index.html" aria-label="EnglishStudy home"><svg aria-hidden="true" width="36" height="36" viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="9" fill="currentColor"/><path d="M7.5 9.5c3.8-.8 7.3.1 10.5 2.1 3.2-2 6.7-2.9 10.5-2.1v16.2c-3.8-.7-7.3 0-10.5 2-3.2-2-6.7-2.7-10.5-2zM18 11.6v16.1" stroke="#faf6e9" stroke-width="1.7" stroke-linejoin="round"/></svg>EnglishStudy</a><a class="back-link" href="../../index.html">← All lessons</a></div></header>
+<main class="shell">
+  <div class="intro"><p class="eyebrow">IT support · Quick reference</p><h1>Windows domain &amp; DNS<span class="dot">.</span></h1><p class="intro-copy">The commands to check a domain, troubleshoot DNS and trace a connection — with simple explanations of what each result means.</p><div class="intro-foot"><span class="meta">15 commands · 1 key concept · Updated 27 Nov 2026</span><button class="print js-only" id="print" type="button">Print reference</button></div></div>
+  <section class="examples" aria-labelledby="examples-title"><h2 id="examples-title">Example values used on this page</h2><div class="example-values"><span>Short domain <code>EXAMPLE</code></span><span>DNS domain <code>ad.example.com</code></span><span>Target IP <code>192.0.2.25</code></span></div><p>Replace these examples with the correct values for your environment before running a command. The domain and IP are reserved for documentation; the IP does not represent a live server. <a href="https://www.iana.org/help/example-domains">Example domains</a> · <a href="https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml">Documentation IP ranges</a></p></section>
+  <div class="guide"><section aria-labelledby="start-title"><h2 id="start-title">A useful order</h2><ol><li>Connect to your corporate network or VPN.</li><li>Check computer membership and network settings.</li><li>Check DNS records, then discover a domain controller.</li><li>Choose a refresh action only if the issue calls for it.</li><li>Trace the route if you suspect a network path issue.</li></ol></section><section aria-labelledby="console-title"><h2 id="console-title">Which window do I open?</h2><p>Use <strong>Command Prompt</strong> for CMD examples. Open <strong>PowerShell</strong> for <code>Get-CimInstance</code>.</p><p>For commands marked <strong>admin</strong>, choose “Run as administrator.” If <code>nltest</code> is unavailable, check with IT for the appropriate AD administration tools.</p><p>The copy buttons copy one command at a time. Nothing on this page runs a Windows command.</p></section></div>
+  <div class="controls js-only" aria-label="Filter reference cards"><div class="search-row"><label class="search-field" for="search"><span>Find a command or topic</span><input id="search" type="search" placeholder="Try: DNS, domain, gpupdate, hybrid…" autocomplete="off"></label><span class="result-count" id="result-count" role="status" aria-live="polite">16 reference cards</span></div><div class="filters" role="group" aria-label="Filter by topic"><button type="button" class="filter" data-filter="all" aria-pressed="true">All topics</button><button type="button" class="filter" data-filter="identity" aria-pressed="false">PC &amp; domain</button><button type="button" class="filter" data-filter="controller" aria-pressed="false">Domain controller</button><button type="button" class="filter" data-filter="dns" aria-pressed="false">DNS</button><button type="button" class="filter" data-filter="refresh" aria-pressed="false">Refresh</button><button type="button" class="filter" data-filter="network" aria-pressed="false">Trace &amp; Hybrid</button></div></div>
+  <noscript><p class="no-js">All commands are shown below. Enable JavaScript to use search, topic filters and copy buttons.</p></noscript>
+  <div id="reference"><section class="command-section" data-group="identity" aria-labelledby="heading-identity"><div class="section-heading"><span class="section-number">01</span><div><h2 id="heading-identity">Your PC and domain</h2><p>Find the network settings and separate the user’s domain from the computer’s membership.</p></div></div><div class="command-grid"><article class="reference-card" id="network-settings">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span></div>
+      <h3>Inspect network settings</h3>
+      <p class="purpose">Shows the full network configuration.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-network-settings" aria-label="Copy command: Inspect network settings">Copy</button></div><pre><code id="code-network-settings">ipconfig /all</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Check DNS servers, IPv4 address, gateway and DNS suffixes on the active adapter.</p>
+      <p class="note">For internal domain lookups, use the DNS configuration provided by your IT team.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">ipconfig</a></p>
+    </article>
+<article class="reference-card" id="user-domain">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span></div>
+      <h3>Which domain is my user in?</h3>
+      <p class="purpose">Displays the DNS domain variable for the current user session.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-user-domain" aria-label="Copy command: Which domain is my user in?">Copy</button></div><pre><code id="code-user-domain">echo %USERDNSDOMAIN%</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>A domain account may show ad.example.com. A local account may leave the variable unset.</p>
+      <p class="note">This is user/session information. It does not prove computer membership or current connectivity. In PowerShell, use $env:USERDNSDOMAIN.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/exchange/disjoint-namespace-scenarios-exchange-2013-help">DNS and logon domain names</a></p>
+    </article>
+<article class="reference-card" id="systeminfo-domain">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span></div>
+      <h3>Read the computer’s domain line</h3>
+      <p class="purpose">Filters system information to the domain or workgroup line.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-systeminfo-domain" aria-label="Copy command: Read the computer’s domain line">Copy</button></div><pre><code id="code-systeminfo-domain">systeminfo | findstr /B /I /C:&quot;Domain&quot;</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>For example: Domain: ad.example.com. /B matches the beginning of a line; /I ignores letter case.</p>
+      <p class="note">This filter assumes English Windows output. For other display languages, use the PowerShell check below.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/findstr">findstr</a> · <a href="https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-computersystem">Computer domain properties</a></p>
+    </article>
+<article class="reference-card" id="computer-domain">
+      <div class="card-meta"><span class="shell-label">PowerShell</span><span class="badge">Preferred method</span></div>
+      <h3>Check computer membership</h3>
+      <p class="purpose">Shows the computer’s domain or workgroup and its AD membership flag.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-computer-domain" aria-label="Copy command: Check computer membership">Copy</button></div><pre><code id="code-computer-domain">Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object Domain, PartOfDomain</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>PartOfDomain = True means the computer is configured as an AD domain member. If False, Domain can show a workgroup.</p>
+      <p class="note">This checks membership configuration; it does not test whether a domain controller is reachable.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-computersystem">Computer domain properties</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/cimcmdlets/get-ciminstance">Get-CimInstance</a></p>
+    </article>
+<article class="reference-card" id="legacy-wmic">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span><span class="badge">Legacy</span></div>
+      <h3>Recognize the old WMIC command</h3>
+      <p class="purpose">On older systems that include WMIC, shows the computer’s domain or workgroup.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-legacy-wmic" aria-label="Copy command: Recognize the old WMIC command">Copy</button></div><pre><code id="code-legacy-wmic">wmic computersystem get domain</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>The spelling is wmic computersystem. Use the PowerShell command above on current Windows.</p>
+      <p class="note">Microsoft lists WMIC as removed from Windows 11 24H2 and later from August 2026, with no Feature on Demand. WMI itself is still supported.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows/whats-new/removed-features">WMIC removal</a></p>
+    </article></div></section>
+<section class="command-section" data-group="controller" aria-labelledby="heading-controller"><div class="section-heading"><span class="section-number">02</span><div><h2 id="heading-controller">Find a domain controller</h2><p>A domain controller (DC) handles services such as domain sign-in and directory lookups.</p></div></div><div class="command-grid"><article class="reference-card" id="find-dc">
+      <div class="card-meta"><span class="shell-label">Command Prompt · admin</span><span class="badge">Start here</span></div>
+      <h3>Find a DC using the full domain</h3>
+      <p class="purpose">Asks Windows to locate a domain controller for the DNS domain.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-find-dc" aria-label="Copy command: Find a DC using the full domain">Copy</button></div><pre><code id="code-find-dc">nltest /dsgetdc:ad.example.com</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Read the DC name, address and completion status. The name might be dc01.ad.example.com.</p>
+      <p class="note">A returned DC does not prove every domain service or the computer’s trust is healthy.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731935(v=ws.11)">Nltest</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/domain-join-networking-errors">Domain discovery troubleshooting</a></p>
+    </article>
+<article class="reference-card" id="find-dc-short">
+      <div class="card-meta"><span class="shell-label">Command Prompt · admin</span></div>
+      <h3>Try the short domain name</h3>
+      <p class="purpose">Locates a DC using the domain’s short name.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-find-dc-short" aria-label="Copy command: Try the short domain name">Copy</button></div><pre><code id="code-find-dc-short">nltest /dsgetdc:EXAMPLE</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>EXAMPLE represents a NetBIOS domain name. It is a different name format from ad.example.com.</p>
+      <p class="note">Prefer the full DNS domain for routine troubleshooting. Short-name discovery depends on the environment.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/domain-join-networking-errors">Domain discovery troubleshooting</a></p>
+    </article>
+<article class="reference-card" id="find-dc-force">
+      <div class="card-meta"><span class="shell-label">Command Prompt · admin</span></div>
+      <h3>Ask for fresh DC discovery</h3>
+      <p class="purpose">Forces rediscovery instead of using cached DC location information.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-find-dc-force" aria-label="Copy command: Ask for fresh DC discovery">Copy</button></div><pre><code id="code-find-dc-force">nltest /dsgetdc:ad.example.com /force</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Useful after correcting DNS or restoring the corporate network/VPN connection.</p>
+      <p class="note">The correct switch is /dsgetdc: — include the slash and the letter s. /force does not repair the domain trust.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731935(v=ws.11)">Nltest</a></p>
+    </article></div></section>
+<section class="command-section" data-group="dns" aria-labelledby="heading-dns"><div class="section-heading"><span class="section-number">03</span><div><h2 id="heading-dns">Check DNS</h2><p>DNS translates names into addresses. Active Directory also uses service records to find its servers.</p></div></div><div class="command-grid"><article class="reference-card" id="dns-name">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span></div>
+      <h3>Look up a DNS name</h3>
+      <p class="purpose">Queries DNS for address records for the name.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-dns-name" aria-label="Copy command: Look up a DNS name">Copy</button></div><pre><code id="code-dns-name">nslookup ad.example.com</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>The Server line identifies the DNS server used; the answer section shows returned records.</p>
+      <p class="note">This lookup alone does not test AD service discovery. Check the SRV records below too.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup">nslookup</a> · <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/verify-srv-dns-records-have-been-created">Active Directory SRV records</a></p>
+    </article>
+<article class="reference-card" id="dns-srv">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span><span class="badge">AD DNS check</span></div>
+      <h3>Find AD service records</h3>
+      <p class="purpose">Queries the SRV records that advertise domain controllers.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-dns-srv" aria-label="Copy command: Find AD service records">Copy</button></div><pre><code id="code-dns-srv">nslookup -type=SRV _ldap._tcp.dc._msdcs.ad.example.com</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Look for DC target names and their advertised LDAP service port.</p>
+      <p class="note">A DNS record being present does not by itself prove the target service is reachable.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/verify-srv-dns-records-have-been-created">Active Directory SRV records</a> · <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup">nslookup</a></p>
+    </article>
+<article class="reference-card" id="dns-cache">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span></div>
+      <h3>Inspect the local DNS cache</h3>
+      <p class="purpose">Shows the DNS resolver cache on this computer.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-dns-cache" aria-label="Copy command: Inspect the local DNS cache">Copy</button></div><pre><code id="code-dns-cache">ipconfig /displaydns</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Review cached names and records before deciding whether to clear them.</p>
+      <p class="note">This inspects the client cache, not the full DNS server database.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">ipconfig</a></p>
+    </article></div></section>
+<section class="command-section" data-group="refresh" aria-labelledby="heading-refresh"><div class="section-heading"><span class="section-number">04</span><div><h2 id="heading-refresh">Refresh when needed</h2><p>Choose the action that matches the issue. These commands do different jobs.</p></div></div><div class="command-grid"><article class="reference-card" id="flush-dns">
+      <div class="card-meta"><span class="shell-label">Command Prompt · admin</span><span class="badge">Cache change</span></div>
+      <h3>Clear cached DNS answers</h3>
+      <p class="purpose">Clears the local DNS resolver cache, including cached failed lookups.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-flush-dns" aria-label="Copy command: Clear cached DNS answers">Copy</button></div><pre><code id="code-flush-dns">ipconfig /flushdns</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Use when stale cached answers may be involved, then retry the affected lookup.</p>
+      <p class="note">It does not change your DNS servers or fix incorrect server records.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">ipconfig</a></p>
+    </article>
+<article class="reference-card" id="register-dns">
+      <div class="card-meta"><span class="shell-label">Command Prompt · admin</span><span class="badge">Registration request</span></div>
+      <h3>Request DNS registration</h3>
+      <p class="purpose">Requests dynamic registration of this computer’s configured DNS names and IP addresses.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-register-dns" aria-label="Copy command: Request DNS registration">Copy</button></div><pre><code id="code-register-dns">ipconfig /registerdns</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Use for a client DNS registration issue. Starting the request does not confirm it succeeded.</p>
+      <p class="note">Registration depends on network access and DNS update permissions. It is different from clearing the cache.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig">ipconfig</a></p>
+    </article>
+<article class="reference-card" id="refresh-policy">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span><span class="badge">Applies policy</span></div>
+      <h3>Reapply Group Policy</h3>
+      <p class="purpose">Reapplies user and computer Group Policy settings, including unchanged settings.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-refresh-policy" aria-label="Copy command: Reapply Group Policy">Copy</button></div><pre><code id="code-refresh-policy">gpupdate /force</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Read both user and computer policy results. Some settings require a sign-out or restart.</p>
+      <p class="note">Connect to the corporate network or VPN for domain policies. This does not repair DNS or install Windows updates.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/gpupdate">gpupdate</a></p>
+    </article></div></section>
+<section class="command-section" data-group="network" aria-labelledby="heading-network"><div class="section-heading"><span class="section-number">05</span><div><h2 id="heading-network">Trace and understand</h2><p>Check the route, then understand what “Node Type: Hybrid” actually means.</p></div></div><div class="command-grid"><article class="reference-card" id="trace-route">
+      <div class="card-meta"><span class="shell-label">Command Prompt</span></div>
+      <h3>Trace the route to an address</h3>
+      <p class="purpose">Shows responding network hops toward the destination.</p>
+      <div class="command-box"><div class="command-bar"><span>COMMAND</span><button type="button" class="copy js-only" data-copy="code-trace-route" aria-label="Copy command: Trace the route to an address">Copy</button></div><pre><code id="code-trace-route">tracert 192.0.2.25</code></pre></div>
+      <p class="look"><strong>Look for / use when</strong>Asterisks mean a hop did not reply in time. They do not automatically prove the route is broken.</p>
+      <p class="note">Optional: tracert /d 192.0.2.25 skips reverse DNS lookups for intermediate hops. Replace the example address before running.</p>
+      <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tracert">tracert</a></p>
+    </article>
+<article class="reference-card concept" id="hybrid-node">
+  <div class="card-meta"><span class="shell-label">Concept · ipconfig /all</span><span class="badge">Remember this</span></div>
+  <h3>Node Type: Hybrid</h3>
+  <p class="purpose">This describes a legacy NetBIOS name-resolution method.</p>
+  <div class="hybrid-steps"><div><span>1</span><strong>Ask WINS</strong><small>Try a NetBIOS name server.</small></div><div><span>2</span><strong>Try broadcast</strong><small>If that lookup does not resolve it.</small></div></div>
+  <p class="look"><strong>Easy memory aid</strong>Hybrid = WINS first, broadcast second.</p>
+  <p class="note">This order is about NetBIOS name resolution. It does not tell you whether DNS is working or whether the device is Microsoft Entra hybrid joined. You do not need to change the node type just because it says Hybrid.</p>
+  <p class="card-source">Microsoft: <a href="https://learn.microsoft.com/en-us/dotnet/api/system.net.networkinformation.netbiosnodetype">NetBIOS node types</a></p>
+</article></div></section></div>
+  <div class="empty" id="empty" hidden><p>No matching cards. Try another word or topic.</p><button class="reset" id="reset" type="button">Show all cards</button></div>
+  <details class="corrections"><summary>Syntax corrections to remember</summary><div class="correction-inner"><p><code>wmic computersystem get domain</code> — spell both words correctly; prefer the PowerShell alternative on current Windows.</p><p><code>nltest /dsgetdc:ad.example.com</code> — the switch is <code>/dsgetdc:</code>, including the slash and <code>s</code>.</p><p><code>ipconfig /registerdns</code> — use a space between the command and its switch for clear, standard formatting.</p><p><code>systeminfo | findstr /B /I /C:"Domain"</code> — <code>/I</code> makes the filter case-insensitive.</p><p><code>echo %USERDNSDOMAIN%</code> — use this syntax in Command Prompt. PowerShell uses <code>$env:USERDNSDOMAIN</code>.</p></div></details>
+</main>
+<footer class="shell end-mark"><p>EnglishStudy · IT support notes</p><p>Microsoft documentation is linked on each card.</p></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  'use strict';
+  const search = document.getElementById('search');
+  const groups = Array.from(document.querySelectorAll('.command-section'));
+  const buttons = Array.from(document.querySelectorAll('[data-filter]'));
+  const result = document.getElementById('result-count');
+  const toast = document.getElementById('toast');
+  let active = 'all';
+  let toastTimer;
+  function applyFilters() {
+    const terms = search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    let total = 0;
+    groups.forEach(group => {
+      let shown = 0;
+      group.querySelectorAll('.reference-card').forEach(card => {
+        const haystack = card.textContent.toLowerCase();
+        const matches = (active === 'all' || active === group.dataset.group) && terms.every(term => haystack.includes(term));
+        card.hidden = !matches;
+        if (matches) shown++;
+      });
+      group.hidden = shown === 0;
+      total += shown;
+    });
+    result.textContent = total + ' of 16 reference cards';
+    document.getElementById('empty').hidden = total !== 0;
+    buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === active)));
+  }
+  function announce(message) {
+    clearTimeout(toastTimer);
+    toast.textContent = message;
+    toastTimer = setTimeout(() => { toast.textContent = ''; }, 4500);
+  }
+  async function copyCommand(button) {
+    const code = document.getElementById(button.dataset.copy);
+    const text = code.textContent;
+    let copied = false;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      }
+    } catch (_) { /* Use the local clipboard fallback below. */ }
+    if (!copied) {
+      const input = document.createElement('textarea');
+      input.value = text;
+      input.setAttribute('readonly', '');
+      input.style.cssText = 'position:fixed;top:0;left:-9999px;';
+      document.body.appendChild(input);
+      input.select();
+      try { copied = document.execCommand('copy'); } catch (_) { copied = false; }
+      input.remove();
+      button.focus({preventScroll:true});
+    }
+    if (copied) {
+      button.textContent = 'Copied';
+      announce('Command copied. Replace example names and addresses before running it.');
+      setTimeout(() => { button.textContent = 'Copy'; }, 2200);
+    } else {
+      const range = document.createRange();
+      range.selectNodeContents(code);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      announce('Automatic copy is unavailable. The command is selected; use Ctrl+C or Cmd+C.');
+    }
+  }
+  search.addEventListener('input', applyFilters);
+  buttons.forEach(button => button.addEventListener('click', () => {
+    active = button.dataset.filter;
+    applyFilters();
+  }));
+  document.getElementById('reset').addEventListener('click', () => {
+    search.value = '';
+    active = 'all';
+    applyFilters();
+    search.focus();
+  });
+  document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', () => copyCommand(button)));
+  document.getElementById('print').addEventListener('click', () => window.print());
+  document.documentElement.classList.add('js');
+  applyFilters();
+})();
+</script>
+</body>
+</html>
